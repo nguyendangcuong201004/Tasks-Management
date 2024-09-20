@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors')
 const env = require("dotenv");
 env.config();
 const database = require("./config/database");
@@ -7,6 +8,8 @@ database.connect();
 const app = express();
 const port = process.env.PORT;
 
+
+app.use(cors()) // all url acess
 app.use(bodyParser.json())
 
 const routerApiV1 = require("./v1/routes/index.route.js");
