@@ -180,3 +180,12 @@ module.exports.passwordReset = async (req, res) => {
     }
 
 }
+
+// [GET] /v1/users/detail
+module.exports.detail = async (req, res) => {
+    res.json({
+        code: 200,
+        message: "Thông tin người dùng:",
+        user: res.locals.user
+    })
+}
