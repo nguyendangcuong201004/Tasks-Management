@@ -9,6 +9,10 @@ router.post("/register", validate.userCheck, controller.register)
 
 router.post("/login", controller.login)
 
-router.post("/password/forgot", controller.passwordForgot)
+router.post("/password/forgot", controller.passwordForgot) 
+
+router.post("/password/otp", controller.passwordOtp) 
+
+router.post("/password/reset", controller.passwordReset) 
 
 module.exports = router;

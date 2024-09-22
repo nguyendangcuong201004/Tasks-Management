@@ -115,3 +115,68 @@ module.exports.passwordForgot = async (req, res) => {
         message: "OTP đã được gửi qua email!"
     })
 }
+
+// [POST] /v1/users/password/otp
+module.exports.passwordOtp = async (req, res) => {
+
+    const email = req.body.email;
+    const otp = req.body.otp;
+
+    const result = await ForgotPassword.findOne({
+        email: email,
+        otp: otp,
+    })
+
+    if (!result){
+        res.json({
+            code: 400,
+            message: "OTP không hợp lệ!"
+        });
+        return;
+    }
+
+    const user = await User.findOne({
+        email: email,
+    })
+
+    const token = user.token;
+
+    res.json({
+        code: 200,
+        token: token,
+        message: "Xác thực thành công!"
+    })
+}
+
+// [POST] /v1/users/password/otp
+module.exports.passwordReset = async (req, res) => {
+
+    const token = req.body.token;
+    const password = req.body.password;
+
+    const user = await User.findOne({
+        token: token,
+        deleted: false,
+    })
+
+    if (user) {
+        await User.updateOne({
+            token: token,
+            deleted: false,
+        }, {
+            password: md5(password)
+        })
+    
+        res.json({
+            code: 200,
+            message: "Đổi mật khẩu thành công!"
+        })
+    }
+    else{
+        res.json({
+            code: 400,
+            message: "Đã xảy ra lỗi!"
+        })
+    }
+
+}
