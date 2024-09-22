@@ -189,3 +189,17 @@ module.exports.detail = async (req, res) => {
         user: res.locals.user
     })
 }
+
+// [GET] /v1/users/list
+module.exports.listUser = async (req, res) => {
+    
+    const users = await User.find({
+        deleted: false,
+    }).select("fullName email")
+
+    res.json({
+        code: 200,
+        message: "Danh sách người dùng do frontend show ra^^",
+        users: users
+    })
+}

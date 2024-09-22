@@ -3,8 +3,14 @@ const Task = require("../models/task.model.js");
 // [GET] /api/v1/tasks
 module.exports.index = async (req, res) => {
 
+    const userId = res.locals.user.id;
+
     // Bộ lọc theo trạng thái
     const find = {
+        $or: [ 
+            { createdBy: userId },
+            { listUsers:  userId }
+         ],
         deleted: false,
     }
 
@@ -47,7 +53,10 @@ module.exports.index = async (req, res) => {
 
 
     const tasks = await Task.find(find).sort(sort).limit(pagination.limit).skip(skip)
-    res.json(tasks)
+    res.json({
+        code: 200,
+        tasks: tasks
+    })
 }
 
 // [GET] /api/v1/tasks/detail/:id
@@ -118,6 +127,7 @@ module.exports.changeMulti = async (req, res) => {
 // [POST] /api/v1/tasks/create
 module.exports.create = async (req, res) => {
 
+    req.body.createdBy = res.locals.user.id;
     const task = new Task(req.body);
     await task.save();
 
